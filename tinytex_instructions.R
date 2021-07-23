@@ -1,5 +1,5 @@
 # reinstall the tinytex package
-install.packages("tinytex")
+#install.packages("tinytex")
 library(tinytex)
 
 # install the full version of the package
@@ -46,7 +46,7 @@ writeLines(c(
   "\\usepackage{texshade}",
   '\\begin{document}',
   "\\begin{texshade}",
-  "example.fasta}",
+  "{example.fasta}",
   "\\end{texshade}",
   '\\end{document}'
 ), "example.tex")
