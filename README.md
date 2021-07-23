@@ -140,7 +140,7 @@ For more help with tinytex/latex issues check out the developer's debugging inst
 
 ## Deleted Uniprot IDs
 
-It is annoying but Uniprot is a curated database meaning that they deleted old / spurious IDs. Many of these are still associated with genes in biomaRt. If you receive an error when trying to get sequences from uniprot and you have been running the default mode of check_delID=FALSE, then it is likely that you will need to download the database (see Part 3 of installation instructions above) and run Unicorn with check_delID=TRUE, and provide the location of the downl deleted ids database Rds file to unicoRn as the del_data argument. This step takes a long time as the database is millions of entries long and takes a while to load and search.
+It is annoying but Uniprot is a curated database meaning that they deleted old / spurious IDs. Many of these are still associated with genes in biomaRt. If you receive an error when trying to get sequences from uniprot and you have been running the default mode of check_delID=FALSE, then it is likely that you will need to download the database (see Part 3 of installation instructions above) and run Unicorn with check_delID=TRUE, and provide the location of the downloaded deleted ids database Rds file to unicoRn as the del_data argument. This step takes a several minutes as the database is millions of entries long and takes a while to load and search (even with data.table...).
 
 When running with check_delID=TRUE if you receive an error like "cannot allocate vector of size...x" then it is likely that your computer ran out of RAM while loading the database of deleted IDs. Here are some things that might help:
 ```sh
