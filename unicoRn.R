@@ -1,5 +1,5 @@
 uniCoRn <- function(base,
-                    subs_name="uniCoRn",
+                    subs_name="unicoRn",
                     genes,
                     len="Full",
                     speciesToUse="xtropicalis|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus",
