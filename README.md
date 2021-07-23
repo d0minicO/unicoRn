@@ -24,9 +24,8 @@ install.packages("tinytex")
 devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?raw=TRUE")
 ```
 *Part 3 (optional) -- download the deleted uniprot IDs database*
-- download this Rds file of deleted uniprot IDs locally to your computer somewhere accessible to your Rstudio session
---https://1drv.ms/u/s!Ah6q8jTg5ESfgaM4owHIdjhCGqcTwg?e=MTklQ4
--- you will pass the location of this file as an argument to unicoRn (see below)
+- download this Rds file (https://1drv.ms/u/s!Ah6q8jTg5ESfgaM4owHIdjhCGqcTwg?e=MTklQ4) of deleted uniprot IDs locally to your computer somewhere accessible to your Rstudio session
+-- you will pass the location of this downloaded file as an argument to unicoRn (see below)
 ---
 
 
