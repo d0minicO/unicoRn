@@ -54,29 +54,9 @@ UnicoRn uses the powerful biomaRt package (https://bioconductor.org/packages/rel
 
 ## Troubleshooting
 
-If the pdf output step fails then it is likely that Rstudio is not able to communicate properly with tinytex/latex. You can try testing out the following code to see if where the problem lies!
+Latex must be installed and communicating properly with R in order to compile and save the pdf. Tinytex (https://www.rdocumentation.org/packages/tinytex/versions/0.32) is a fairly straightforward way to get Rstudio and latex to communicate. If the pdf output step fails then it is likely that Rstudio is not able to communicate properly with tinytex/latex. You can try testing out the following code to see where the problem lies
 
 ```sh
-# reinstall the tinytex package
-install.packages("tinytex")
-library(tinytex)
-
-# install the full version of the package
-tinytex:::install_prebuilt('TinyTeX')
-
-# list installed packages available to tinytex
-# check that "texshade" is listed
-tl_pkgs()
-
-# install a lot of the additional common packages
-tinytex:::install_yihui_pkgs()
-
-# force installation of texshade
-tlmgr_install("texshade")
-
-# If having problems use this to try to get more informative error messages
-options(tinytex.verbose = TRUE)
-
 ## See if tinytex can compile this basic test pdf
 writeLines(c(
    '\\documentclass{article}',
@@ -116,6 +96,30 @@ tinytex::pdflatex("example.tex")
 ## if this doesn't work try this method to compile instead
 ## This is what unicoRn actually uses as tinytex::pdflatex did not work for me
 tools::texi2pdf("example.tex", clean=TRUE)
+```
+
+If these didn't both work, then you will have to try make sure tinytex and texshade are properly installed
+
+```sh
+# reinstall the tinytex package
+install.packages("tinytex")
+library(tinytex)
+
+# install the full version of the package
+tinytex:::install_prebuilt('TinyTeX')
+
+# list installed packages available to tinytex
+# check that "texshade" is listed
+tl_pkgs()
+
+# install a lot of the additional common packages
+tinytex:::install_yihui_pkgs()
+
+# force installation of texshade
+tlmgr_install("texshade")
+
+# If having problems use this to try to get more informative error messages
+options(tinytex.verbose = TRUE)
 
 ## Alternative way to install tinytex with texshade
 install_tinytex(
@@ -128,4 +132,4 @@ install_tinytex(
 )
 ```
 
-For more help with tinytex check out the developer's debugging instructions (https://yihui.org/tinytex/r/#debugging)
+For more help with tinytex/latex issues check out the developer's debugging instructions (https://yihui.org/tinytex/r/#debugging)
