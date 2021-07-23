@@ -23,7 +23,6 @@ uniCoRn <- function(base,
   
   require(msa)
   require(Biostrings)
-  require(magrittr)
   require(biomaRt)
   require(seqinr)
   require(tidyverse)
@@ -166,7 +165,8 @@ uniCoRn <- function(base,
       
       # have to replace any NAs with blank as otherwise this breaks the if statement below
       # make temp into data table to allow joining to the deleted IDs later
-      temp %<>%
+      temp =
+        temp %>%
         replace_na(list(uniprotswissprot="")) %>%
         data.table
       
@@ -281,14 +281,16 @@ uniCoRn <- function(base,
     setkey(del_accs, "ID")
     
     # make the ids table into a data table to allow quick join to the deleted IDs
-    data %<>% data.table()
+    data =
+      data %>% data.table()
     # set the key
     setkey(data,"Uniprot_id")
     
     deleted = makeChar(data[del_accs, nomatch = 0])
     
     # remove any deleted IDs
-    data %<>%
+    data =
+      data %>%
       filter(Uniprot_id %notin% deleted)
     
     if(length(deleted)==0){
@@ -348,10 +350,12 @@ uniCoRn <- function(base,
   
   
   
-  data %<>% arrange(Species)
+  data =
+    data %>% arrange(Species)
   
   ## get a new column that has a concise conjoined name
-  data %<>% 
+  data = 
+    data %>% 
     mutate(name=paste0(Gene,"_",Species))
   
   
