@@ -42,7 +42,9 @@ devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?ra
 ---
 
 ## Output
-[![Example image](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output.PNG)
+[![Example image](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG)
+
+See https://github.com/d0minicO/unicoRn/blob/main/example_output_files/ for examples of the .fasta alignment, .tex file, and alignment.pdf
 
 
 ## How does it work?
