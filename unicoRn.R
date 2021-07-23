@@ -1,4 +1,4 @@
-uniCoRn <- function(base,
+unicoRn <- function(base,
                     subs_name="unicoRn",
                     genes,
                     len="Full",

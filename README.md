@@ -41,6 +41,27 @@ devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?ra
 
 ---
 
+# Example usage
+
+Basic usage without removing deleted IDs
+
+```sh
+unicoRn(base="C:/user/baloon/unicoRn_Analysis/",
+        subs_name="UnicoRn_example",
+        genes=c("GPS2","DDX50","DDX21"))
+```
+
+Same as above with removal of deleted IDs
+
+```sh
+unicoRn(base="C:/user/baloon/unicoRn_Analysis/",
+        subs_name="UnicoRn_example",
+        genes=c("GPS2","DDX50","DDX21"),
+        del_data="C:/user/baloon/unicoRn_Analysis/del_data.RData",
+        check_delID=T)
+```
+---
+
 # Output
 [![Example image](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG)
 
