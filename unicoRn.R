@@ -12,8 +12,8 @@ uniCoRn <- function(base,
   # subs name = name of this list of genes to save in their own folder
   # genes = character string or vector eg "Gene", or c("Gene1", "Gene2")
   # len = the length of the first how many AAs to plot (or if you just want the whole length make len="whole" or any characters will do)
-  # del_data = location where the databse of IDs deleted from uniprot are
   # speciesToUse = character string of the species to use
+  # del_data = location where the databse of IDs deleted from uniprot are
   # check_delID = TRUE or FALSE. Might be required if unable to pull some sequences from uniprot if they were deleted. Takes a long time so default should be false
   
   
