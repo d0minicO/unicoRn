@@ -1,8 +1,8 @@
 # UnicoRn
 ## _R multiple sequence alignment tool for protein conservation analysis_
 
-UnicoRn is a custom R function that takes gene names and outputs a pdf for each gene showing a pretty alignment of the amino acid sequence for that gene across multiple predefined species 
-[![example](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG)
+UnicoRn is a custom R function that takes gene names and outputs a pdf for each gene showing a pretty alignment of the amino acid sequence for that gene across multiple predefined species ([![example](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG))
+
 ---
 ## Install
 *Part 1 -- install package dependencies if you have not already got them*
