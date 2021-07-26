@@ -1,7 +1,7 @@
 # UnicoRn
 ## _R multiple sequence alignment tool for protein conservation analysis_
 
-UnicoRn is a custom R function that takes gene names and outputs a pdf for each gene showing a pretty alignment of the amino acid sequence for that gene across multiple predefined species ([![example](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG))
+UnicoRn is a custom R function that takes gene names and outputs a pdf for each gene showing a pretty alignment of the amino acid sequence for that gene across multiple predefined species ([![example output](https://ibb.co/RYNdk5r)](https://github.com/d0minicO/unicoRn/blob/main/example_output_files/example_output.PNG))
 
 ---
 # Install
@@ -34,7 +34,7 @@ devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?ra
 - subs name = name of this list of genes to save in their own folder _(eg. "UnicoRn_analysis")_
 - genes = character string or vector eg "Gene", or c("Gene1", "Gene2")
 - len = the length of the first how many AAs to plot (or if you just want the whole length make len="whole" or any characters will do)
-- speciesToUse = character string of the species to use
+- speciesToUse = character string of the species to use _(eg. ""xtropicalis|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus"")_
 - del_data = location where the databse of IDs deleted from uniprot are _(eg. "C:/user/baloons/del_data.Rds")_
  -- these must be formatted in the way that ensembl recognises them and separated with a boolean **or** _(eg. "hsapiens|mmusculus|clfamiliaris")_ will get sequences for human, mouse, and dog
 - check_delID = TRUE or FALSE. Some Uniprot IDs get deleted by them but are still found in the biomart database. So you might need to filter these out before trying to get sequences from uniprot otherwise you will receive an error and no output. This takes a long time (several Gb of RAM to load the database...) so default should be to try running without checking for deleted IDs _(eg FALSE)_
@@ -71,11 +71,27 @@ See https://github.com/d0minicO/unicoRn/blob/main/example_output_files/ for exam
 
 # How does it work?
 
-UnicoRn uses the powerful biomaRt package (https://bioconductor.org/packages/release/bioc/html/biomaRt.html) to locate gene names across species and link them to a uniprot ID. Then, the curated uniprot database (https://www.uniprot.org/) is queried to extract the amino acid sequences for those proteins. The package msa (https://bioconductor.org/packages/release/bioc/html/msa.html) is used to generate a multiple sequence alignment. The alignment is aved (.fasta format) and a custom .tex file is created utilising the texshade package (https://www.ctan.org/pkg/texshade) inspired by this example (https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc). Finally, the tinytex implimentation of latex (https://www.rdocumentation.org/packages/tinytex/versions/0.32) is used to compile and save a pdf of the alignment.
+UnicoRn uses the powerful biomaRt package (https://bioconductor.org/packages/release/bioc/html/biomaRt.html) to locate gene names across species and link them to a uniprot ID. Then, the curated uniprot database (https://www.uniprot.org/) is queried to extract the amino acid sequences for those proteins. The package msa (https://bioconductor.org/packages/release/bioc/html/msa.html) is used to generate a multiple sequence alignment. The alignment is saved (.fasta format) and a custom .tex file is created utilising the texshade package (https://www.ctan.org/pkg/texshade) inspired by this example (https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc). Finally, the tinytex implimentation of latex (https://www.rdocumentation.org/packages/tinytex/versions/0.32) is used to compile and save a pdf of the alignment.
+
+---
+
+# Limitations
+
+A limitation of this function is that it only takes the canonical sequence for each Uniprot entry. This means that if you know you require a specific protein isoform, you may need to check whether the canonical sequence is suitable. In many cases the canonical sequence is suitable and is [defined by uniprot as follows:](https://www.uniprot.org/help/canonical%5Fand%5Fisoforms "What is the canonical sequence?")
+
+_"To reduce redundancy, the UniProtKB/Swiss-Prot policy is to describe all the protein products encoded by one gene in a given species in a single entry. We choose for each entry a canonical sequence based on at least one of the following criteria:_
+
+- _It is the most prevalent._
+- _It is the most similar to orthologous sequences found in other species._
+- _By virtue of its length or amino acid composition, it allows the clearest description of domains, isoforms, genetic  variation, post-translational modifications, etc._
+- _In the absence of any information, we choose the longest sequence."_
+
 
 ---
 
 # Troubleshooting
+
+dominic.owens@utoronto.ca
 
 ## Tinytex
 Latex must be installed and communicating properly with R in order to compile and save the pdf. Tinytex (https://www.rdocumentation.org/packages/tinytex/versions/0.32) is a fairly straightforward way to get Rstudio and latex to communicate. If the pdf output step fails then it is likely that Rstudio is not able to communicate properly with tinytex/latex. You can try testing out the following code to see where the problem lies
@@ -161,7 +177,7 @@ For more help with tinytex/latex issues check out the developer's debugging inst
 
 ## Deleted Uniprot IDs
 
-It is annoying but Uniprot is a curated database meaning that they deleted old / spurious IDs. Many of these are still associated with genes in biomaRt. If you receive an error when trying to get sequences from uniprot and you have been running the default mode of check_delID=FALSE, then it is likely that you will need to download the database (see Part 3 of installation instructions above) and run Unicorn with check_delID=TRUE, and provide the location of the downloaded deleted ids database Rds file to unicoRn as the del_data argument. This step takes a several minutes as the database is millions of entries long and takes a while to load and search (even with data.table...).
+It is annoying but Uniprot is a curated database meaning that they delete old and/or spurious IDs. Many of these are still associated with genes in biomaRt. If you receive an error when trying to get sequences from uniprot and you have been running the default mode of check_delID=FALSE, then it is likely that you will need to download the database (see Part 3 of installation instructions above) and run Unicorn with check_delID=TRUE, and provide the location of the downloaded deleted ids database Rds file to unicoRn as the del_data argument. This step takes a several minutes as the database is millions of entries long and takes a while to load and search (even with data.table...).
 
 When running with check_delID=TRUE if you receive an error like "cannot allocate vector of size...x" then it is likely that your computer ran out of RAM while loading the database of deleted IDs. Here are some things that might help:
 ```sh
