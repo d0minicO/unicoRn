@@ -482,11 +482,10 @@ unicoRn <- function(base,
     
     message("Printing the pdf for you now... \n")
     
-    ### this ACTUALLY WORKS!!!!!
     ## save pdf in root folder
     tools::texi2pdf(texFile, clean=TRUE)
     #rename the temp file to the desired output
-    pdf_file_temp = paste0("~/","conservationAnalysis_",g,".pdf")
+    pdf_file_temp = paste0("~/","UnicoRn_analysis_",g,".pdf")
     file.rename(pdf_file_temp, pdfFile)
   }
   
