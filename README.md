@@ -81,7 +81,7 @@ UnicoRn uses the powerful biomaRt package (https://bioconductor.org/packages/rel
 
 # Limitations
 
-A limitation of this function is that it only takes the canonical sequence for each Uniprot entry. This means that if you know you require a specific protein isoform, you may need to check whether the canonical sequence is suitable. In many cases the canonical sequence is suitable and is [defined by uniprot as follows:](https://www.uniprot.org/help/canonical%5Fand%5Fisoforms "What is the canonical sequence?")
+A limitation of this function is that it only takes the canonical sequence for each Uniprot entry. This means that if you know you require a specific protein isoform, the canonical sequence may not be suitable. In many cases, however, the canonical sequence is acceptable. It is [defined by uniprot](https://www.uniprot.org/help/canonical%5Fand%5Fisoforms "What is the canonical sequence?") as follows:
 
 _"To reduce redundancy, the UniProtKB/Swiss-Prot policy is to describe all the protein products encoded by one gene in a given species in a single entry. We choose for each entry a canonical sequence based on at least one of the following criteria:_
 
