@@ -33,11 +33,15 @@ devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?ra
 - base = route / working directory _(eg. "C:/user/baloons/")_
 - subs name = name of this list of genes to save in their own folder _(eg. "UnicoRn_analysis")_
 - genes = character string or vector eg "Gene", or c("Gene1", "Gene2")
-- len = the length of the first how many AAs to plot (or if you just want the whole length make len="whole" or any characters will do)
-- speciesToUse = character string of the species to use -- these must be formatted in the way that ensembl recognises them and separated with a boolean **or** _(eg. "hsapiens|mmusculus|clfamiliaris")_ will get sequences for human, mouse, and dog
-- del_data = location where the databse of IDs deleted from uniprot are _(eg. "C:/user/baloons/del_data.Rds")_
+- len _(optional)_ = the length of the first how many AAs to plot (or if you just want the whole length make len="whole" or any characters will do)
+--- _default is full length_
+- speciesToUse _(optional)_ = character string of the species to use -- these must be formatted in the way that ensembl recognises them and separated with a boolean **or** _(eg. "hsapiens|mmusculus|clfamiliaris")_ will get sequences for human, mouse, and dog
+--- _default is to look for human, mouse, dog, opossum, chicken, frog, zebrafish, xenopus, and drosophila sequences. Will only use species where a gene/sequence was found_
 
-- check_delID = TRUE or FALSE. Some Uniprot IDs get deleted by them but are still found in the biomart database. So you might need to filter these out before trying to get sequences from uniprot otherwise you will receive an error and no output. This takes a long time (several Gb of RAM to load the database...) so default should be to try running without checking for deleted IDs _(eg FALSE)_
+- check_delID _(optional)_ = TRUE or FALSE. Some Uniprot IDs get deleted by them but are still found in the biomart database. So you might need to filter these out before trying to get sequences from uniprot otherwise you will receive an error and no output. This takes a long time (several Gb of RAM to load the database...) so default should be to try running without checking for deleted IDs _(eg FALSE)_
+--- _default is to not check for deleted IDs_
+- del_data _(optional)_ = location where the databse of IDs deleted from uniprot are _(eg. "C:/user/baloons/del_data.Rds")_
+--- _default is to not check for deleted IDs_
 
 ---
 
