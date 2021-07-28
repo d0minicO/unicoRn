@@ -42,7 +42,8 @@ devtools::source_url("https://github.com/d0minicO/unicoRn/blob/main/unicoRn.R?ra
 --- _default is to not check for deleted IDs_
 - del_data _(optional)_ = location where the databse of IDs deleted from uniprot are _(eg. "C:/user/baloons/del_data.Rds")_
 --- _default is to not check for deleted IDs_
-
+- returnData _(optional)_ = TRUE or FALSE. If TRUE, then return a data.frame (tibble) of the uniprot IDs, species, and sequences.
+--- _default is to not to return a data frame_
 ---
 
 # Example usage
