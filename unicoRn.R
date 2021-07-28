@@ -4,8 +4,8 @@ unicoRn <- function(base,
                     len="Full",
                     speciesToUse="xtropicalis|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus",
                     del_data=NULL,
-                    check_delID=FALSE){
-  
+                    check_delID=FALSE,
+                    returnData=FALSE){
   
   ## inputs
   # base = route / working directory
@@ -15,7 +15,7 @@ unicoRn <- function(base,
   # speciesToUse = character string of the species to use
   # del_data = location where the databse of IDs deleted from uniprot are
   # check_delID = TRUE or FALSE. Might be required if unable to pull some sequences from uniprot if they were deleted. Takes a long time so default should be false
-  
+  # returnData = TRUE or FALSE. If TRUE, then return a data.frame of the uniprot IDs, species, and sequences.
   
   #############
   # Libraries #
@@ -107,8 +107,6 @@ unicoRn <- function(base,
   # Get the AA sequences #
   ########################
   ## using biomart then uniprot
-  
-  
   
   
   ## loop through each mart
@@ -488,6 +486,13 @@ unicoRn <- function(base,
     pdf_file_temp = paste0("~/","UnicoRn_analysis_",g,".pdf")
     file.rename(pdf_file_temp, pdfFile)
   }
+  
+  
+  ## should we return the data?
+  if(!returnData){
+    return(data)
+    }
+  
   
   
 } # end of function
