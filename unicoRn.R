@@ -357,141 +357,145 @@ unicoRn <- function(base,
     mutate(name=paste0(Gene,"_",Species))
   
   
-  ##############
-  # ALIGNMENTS #
-  ##############
-  
-  #g=genes[3]
-  tex_files = data.frame()
-  for (g in genes){
-    
-    # outputs
-    alFile = paste0(alignDir,"conservationAnalysis_",g,".fasta")
-    texFile = paste0(alignDir,"conservationAnalysis_",g,".tex")
-    pdfFile = paste0(alignDir,"conservationAnalysis_",g,".pdf")
-    
-    # filter on just this gene
-    temp =
-      data %>%
-      filter(Gene==g)
-    
-    
-    if(nrow(temp)<2){
-      message("Not enough sequences for ",g, " to align, skipping")
-      next
-    }
-    
-    # get the AAStringSet object and give it proper names
-    seqs = AAStringSet(temp$temp_seq)
-    names(seqs) = temp$name
-    
-    
-    ## subset the first X (len) AAs
-    if(is.numeric(len)){
-      seqs = subseq(seqs,1,len)
-    }
-    
-    # do the alignment
-    aligned = msa(seqs,order = "input")
-    
-    # save the alignment in a way texshade can compile
-    msaPrettyPrint(aligned,
-                   alFile = alFile,
-                   #file = texFile,
-                   output="asis",
-                   #showNames="none",
-                   #showLogo="top",
-                   #logoColors="rasmol",
-                   #shadingMode="similar",
-                   #showLegend=FALSE,
-                   askForOverwrite=FALSE#,
-                   #furtherCode=c("\\defconsensus{.}{lower}{upper}",
-                   #             "\\showruler{1}{top}")
-    )
-    
-    
-    message("Saved fasta alignments for ", g)
-    
-    
-    ## save the tex file
-    ### modify the display options as you please!
-    #### best if you know some latex :)
-    writeLines(c(
-      "\\documentclass[preview]{standalone}",
-      "\\usepackage{texshade}",
-      "\\usepackage{inconsolata}",
-      "\\usepackage{geometry}%[showframe]",
-      
-      "\\begin{document}",
-      paste0("\\begin{texshade}{",alFile,"}"),
-      # IDENTITY HIGHLIGHTING
-      "\\shadingmode[allmatchspecial]{identical}",
-      "\\nomatchresidues{Gray70}{White}{upper}{bf}",
-      "\\conservedresidues{Black}{LightCyan}{upper}{bf}",
-      "\\allmatchresidues{White}{Red}{upper}{bf}",
-      
-      # CHEMICAL HIGHLIGHTING
-      #\\shadingmode[chemical]{functional}
-      
-      # STRUCTURAL HIGHLIGHTING
-      #\\shadingmode[structure]{functional} 
-      
-      # HIGHLIGHTING THRESHOLD
-      "\\threshold[100]{50}", #% [high]{low}
-      
-      # CAPTION - textbf{} specifies bold text
-      #\\showcaption[bottom]{\\textbf{Protein MSA with Similarity Highlighting}} 
-      
-      # LEGEND
-      "\\showlegend",
-      "\\movelegend{0cm}{0cm}", #% {Horizontal}{Vertical} offsets
-      
-      # TOP NUMBERING
-      "\\showruler{1}{top}",
-      #\\hidenumbering
-      
-      # SIDE NUMBERING
-      #"\\shownumbering",
-      
-      # CONSENSUS
-      #\\hideconsensus
-      "\\showconsensus[ColdHot]{bottom}",
-      "\\defconsensus{.}{lower}{upper}",
-      
-      # FINGERPRINTING
-      #\\fingerprint{200}
-      
-      # SEQUENCE LOGO
-      #"\\showsequencelogo{top}",
-      #\\showlogoscale{leftright}
-      #\\dofrequencycorrection
-      #\\setends{1}{1..200}
-      
-      # TEXT SIZE (see README)
-      "\\namesfootnotesize",
-      "\\residuesfootnotesize",
-      "\\legendfootnotesize",
-      "\\numberingtiny",
-      
-      # end document
-      "\\end{texshade}",
-      "\\end{document}"),
-      texFile)
-    
-    message("Printing the pdf for you now... \n")
-    
-    ## save pdf in root folder
-    tools::texi2pdf(texFile, clean=TRUE)
-    #rename the temp file to the desired output
-    pdf_file_temp = paste0("~/","UnicoRn_analysis_",g,".pdf")
-    file.rename(pdf_file_temp, pdfFile)
-  }
-  
-  
   ## should we return the data?
-  if(!returnData){
+  if(returnData){
+    message("Just returning the data for you and not aligning or plotting ")
     return(data)
+  } else if (!returnData){
+    
+    
+    
+    ##############
+    # ALIGNMENTS #
+    ##############
+    
+    #g=genes[3]
+    tex_files = data.frame()
+    for (g in genes){
+      
+      # outputs
+      alFile = paste0(alignDir,"conservationAnalysis_",g,".fasta")
+      texFile = paste0(alignDir,"conservationAnalysis_",g,".tex")
+      pdfFile = paste0(alignDir,"conservationAnalysis_",g,".pdf")
+      
+      # filter on just this gene
+      temp =
+        data %>%
+        filter(Gene==g)
+      
+      
+      if(nrow(temp)<2){
+        message("Not enough sequences for ",g, " to align, skipping")
+        next
+      }
+      
+      # get the AAStringSet object and give it proper names
+      seqs = AAStringSet(temp$temp_seq)
+      names(seqs) = temp$name
+      
+      
+      ## subset the first X (len) AAs
+      if(is.numeric(len)){
+        seqs = subseq(seqs,1,len)
+      }
+      
+      # do the alignment
+      aligned = msa(seqs,order = "input")
+      
+      # save the alignment in a way texshade can compile
+      msaPrettyPrint(aligned,
+                     alFile = alFile,
+                     #file = texFile,
+                     output="asis",
+                     #showNames="none",
+                     #showLogo="top",
+                     #logoColors="rasmol",
+                     #shadingMode="similar",
+                     #showLegend=FALSE,
+                     askForOverwrite=FALSE#,
+                     #furtherCode=c("\\defconsensus{.}{lower}{upper}",
+                     #             "\\showruler{1}{top}")
+      )
+      
+      
+      message("Saved fasta alignments for ", g)
+      
+      
+      ## save the tex file
+      ### modify the display options as you please!
+      #### best if you know some latex :)
+      writeLines(c(
+        "\\documentclass[preview]{standalone}",
+        "\\usepackage{texshade}",
+        "\\usepackage{inconsolata}",
+        "\\usepackage{geometry}%[showframe]",
+        
+        "\\begin{document}",
+        paste0("\\begin{texshade}{",alFile,"}"),
+        # IDENTITY HIGHLIGHTING
+        "\\shadingmode[allmatchspecial]{identical}",
+        "\\nomatchresidues{Gray70}{White}{upper}{bf}",
+        "\\conservedresidues{Black}{LightCyan}{upper}{bf}",
+        "\\allmatchresidues{White}{Red}{upper}{bf}",
+        
+        # CHEMICAL HIGHLIGHTING
+        #\\shadingmode[chemical]{functional}
+        
+        # STRUCTURAL HIGHLIGHTING
+        #\\shadingmode[structure]{functional} 
+        
+        # HIGHLIGHTING THRESHOLD
+        "\\threshold[100]{50}", #% [high]{low}
+        
+        # CAPTION - textbf{} specifies bold text
+        #\\showcaption[bottom]{\\textbf{Protein MSA with Similarity Highlighting}} 
+        
+        # LEGEND
+        "\\showlegend",
+        "\\movelegend{0cm}{0cm}", #% {Horizontal}{Vertical} offsets
+        
+        # TOP NUMBERING
+        "\\showruler{1}{top}",
+        #\\hidenumbering
+        
+        # SIDE NUMBERING
+        #"\\shownumbering",
+        
+        # CONSENSUS
+        #\\hideconsensus
+        "\\showconsensus[ColdHot]{bottom}",
+        "\\defconsensus{.}{lower}{upper}",
+        
+        # FINGERPRINTING
+        #\\fingerprint{200}
+        
+        # SEQUENCE LOGO
+        #"\\showsequencelogo{top}",
+        #\\showlogoscale{leftright}
+        #\\dofrequencycorrection
+        #\\setends{1}{1..200}
+        
+        # TEXT SIZE (see README)
+        "\\namesfootnotesize",
+        "\\residuesfootnotesize",
+        "\\legendfootnotesize",
+        "\\numberingtiny",
+        
+        # end document
+        "\\end{texshade}",
+        "\\end{document}"),
+        texFile)
+      
+      message("Printing the pdf for you now... \n")
+      
+      ## save pdf in root folder
+      tools::texi2pdf(texFile, clean=TRUE)
+      #rename the temp file to the desired output
+      pdf_file_temp = paste0("~/","UnicoRn_analysis_",g,".pdf")
+      file.rename(pdf_file_temp, pdfFile)
     }
+    
+  }
   
   
   
