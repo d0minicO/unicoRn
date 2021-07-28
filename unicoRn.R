@@ -330,7 +330,7 @@ unicoRn <- function(base,
   } # end of the for each id loop
   
   
-  message("Done gathering sequences from uniprot moving on to alignment \n")
+  message("Done gathering sequences from uniprot")
   
   
   # set up the levels of the species in the df correctly
@@ -363,7 +363,7 @@ unicoRn <- function(base,
     return(data)
   } else if (!returnData){
     
-    
+    message("Moving on to alignment \n")
     
     ##############
     # ALIGNMENTS #
