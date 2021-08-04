@@ -120,7 +120,7 @@ unicoRn <- function(base,
     mart = 
       left_join(species_marts,all_species,by="ensembl_name") %>% 
       filter(nice_name==!!spec) %>%
-      select(dataset) %>%
+      dplyr::select(dataset) %>%
       makeChar
     
     
