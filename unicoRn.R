@@ -337,6 +337,10 @@ unicoRn <- function(base,
   ## this makes sure the alignment is done from Human down to Fly
   data = as_tibble(df)
   
+  data =
+    data %>%
+    dplyr::rename(Species = spec)
+  
   data$Species = factor(data$Species, levels=c("Human",
                                                "Mouse",
                                                "Dog",
@@ -354,7 +358,7 @@ unicoRn <- function(base,
   ## get a new column that has a concise conjoined name
   data = 
     data %>% 
-    mutate(name=paste0(Gene,"_",Species))
+    mutate(name=paste0(gene,"_",Species))
   
   
   ## should we return the data?
@@ -374,14 +378,14 @@ unicoRn <- function(base,
     for (g in genes){
       
       # outputs
-      alFile = paste0(alignDir,"conservationAnalysis_",g,".fasta")
-      texFile = paste0(alignDir,"conservationAnalysis_",g,".tex")
-      pdfFile = paste0(alignDir,"conservationAnalysis_",g,".pdf")
+      alFile = paste0(alignDir,"UnicoRn_analysis_",g,".fasta")
+      texFile = paste0(alignDir,"UnicoRn_analysis_",g,".tex")
+      pdfFile = paste0(alignDir,"UnicoRn_analysis_",g,".pdf")
       
       # filter on just this gene
       temp =
         data %>%
-        filter(Gene==g)
+        filter(gene==g)
       
       
       if(nrow(temp)<2){
