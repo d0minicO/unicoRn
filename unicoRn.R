@@ -337,10 +337,6 @@ unicoRn <- function(base,
   ## this makes sure the alignment is done from Human down to Fly
   data = as_tibble(df)
   
-  data =
-    data %>%
-    dplyr::rename(Species = spec)
-  
   data$Species = factor(data$Species, levels=c("Human",
                                                "Mouse",
                                                "Dog",
