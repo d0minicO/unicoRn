@@ -354,7 +354,7 @@ unicoRn <- function(base,
   ## get a new column that has a concise conjoined name
   data = 
     data %>% 
-    mutate(name=paste0(gene,"_",Species))
+    mutate(name=paste0(Gene,"_",Species))
   
   
   ## should we return the data?
