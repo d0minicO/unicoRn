@@ -381,7 +381,7 @@ unicoRn <- function(base,
       # filter on just this gene
       temp =
         data %>%
-        filter(gene==g)
+        filter(Gene==g)
       
       
       if(nrow(temp)<2){
