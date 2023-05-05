@@ -2,7 +2,7 @@ unicoRn <- function(base,
                     subs_name="unicoRn",
                     genes,
                     len="Full",
-                    speciesToUse="xtropicalis|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus",
+                    speciesToUse="xtropicalis|ecaballus|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus"
                     del_data=NULL,
                     check_delID=FALSE,
                     returnData=FALSE,
@@ -79,6 +79,7 @@ unicoRn <- function(base,
   # the list of all species that are supported
   ## the name ensembl uses and the name that a human wants to know
   all_species = data.frame(ensembl_name = c("xtropicalis",
+                                            "ecaballus",
                                             "mdomestica",
                                             "drerio",
                                             "dmelanogaster",
@@ -87,6 +88,7 @@ unicoRn <- function(base,
                                             "clfamiliaris",
                                             "ggallus"),
                            nice_name = c("Frog",
+                                         "Horse",
                                          "Opossum",
                                          "Zebrafish",
                                          "Drosophila",
@@ -125,7 +127,7 @@ unicoRn <- function(base,
       makeChar
     
     
-    message("Hello! loading all ensembl genes for ", spec, "\n")
+    cat("Hello! loading all ensembl genes for ", spec, "\n")
     
     
     this_mart = useDataset(mart,mart=ensembl) # this is slow so only do once for the whole set of genes
@@ -140,7 +142,7 @@ unicoRn <- function(base,
     
     # skip if nothing comes back from biomart
     if(nrow(mapping)==0){ 
-      message("No records for given genes for ", spec, " moving on \n")
+      cat("No records for given genes for ", spec, " moving on \n")
       next
     }
     ## loop through each gene and check it has been found
@@ -155,7 +157,7 @@ unicoRn <- function(base,
     for(gene in genes){
       
       
-      message("Getting sequences for ", gene, "\n")
+      cat("Getting sequences for ", gene, "\n")
       
       # case insensitive match
       temp =
@@ -166,41 +168,46 @@ unicoRn <- function(base,
       # make temp into data table to allow joining to the deleted IDs later
       temp =
         temp %>%
-        mutate(across(everything(), ~ if_else(is.na(.), "", .)))
+        mutate(across(everything(), ~ if_else(is.na(.), "", .))) %>%
         data.table
       
       
       # if we didnt match that gene then skip it
       if (nrow(temp)==0){
-        message("warning: no ", gene, " found in ", spec, " database \n")
+        cat("warning: no ", gene, " found in ", spec, " database \n")
         next
       }
       
       # if we only got one entry then that's cool
       if(nrow(temp)==1){
-        message(gene, " was found uniquely ")
+        cat(gene, " was found uniquely ")
         
         # keep the uniprotID if there is one, or just keep the tremblID
         if(temp$uniprotswissprot!=""){
-          message("taking uniprot ID \n")
+          cat("taking uniprot ID \n")
           id = makeChar(temp$uniprotswissprot)
           
         }
         
         else if(nchar(temp$uniprotsptrembl)==6){
-          message("taking TREMBL ID short \n")
+          cat("taking TREMBL ID short \n")
           id = makeChar(temp$uniprotsptrembl)
           
         } else if (nchar(temp$uniprotsptrembl)==10){
           message("taking TREMBL ID long \n")
-          id = makeChar(temp$uniprotsptrembl)
+          id = temp %>% pull(uniprotsptrembl)#makeChar(temp$uniprotsptrembl)
+          
+        } else if ((temp$uniprotswissprot=="") & (temp$uniprotsptrembl="")){
+          message("missing uniprot or TREMBL ID in biomaRt table, skipping species")
+          next
           
         } else {
           warning(gene, " encountered a problem, check it \n")
+          next
         }
         
       } else if (nrow(temp)>1){ # end of the unique returns
-        message(gene, " has more than one match ")
+        cat(gene, " has more than one match ")
         
         
         # look for the uniprot ID
@@ -224,11 +231,11 @@ unicoRn <- function(base,
         
         
         if(nrow(temp1)==1){
-          message("taking uniprot ID \n")
+          cat("taking uniprot ID \n")
           id = makeChar(temp1$uniprotswissprot)
           
         } else if (nrow(temp2)==1){
-          message("taking short TREMBL ID \n")
+          cat("taking short TREMBL ID \n")
           
           id =
             temp2 %>%
@@ -237,7 +244,7 @@ unicoRn <- function(base,
             makeChar
           
         } else if (nrow(temp3)==1){
-          message("taking long TREMBL ID \n")
+          cat("taking long TREMBL ID \n")
           id =
             temp3 %>%
             filter(nchar(uniprotsptrembl)==10)%>%
@@ -245,7 +252,7 @@ unicoRn <- function(base,
             makeChar
           
         } else {
-          message(" something went WRONG \n")
+          cat(" something went WRONG \n")
         }
         
         
@@ -274,7 +281,7 @@ unicoRn <- function(base,
     ### all accessions deleted by uniprot
     ## huge table takes ages to load
     ## only work on in data.table syntax not dplyr!!
-    message("Now loading the uniprot deleted IDs database which will take a minute or two...\n")
+    cat("Now loading the uniprot deleted IDs database which will take a minute or two...\n")
     del_accs = readRDS(del_data)
     # set keys to help join faster
     setkey(del_accs, "ID")
@@ -293,17 +300,17 @@ unicoRn <- function(base,
       filter(Uniprot_id %notin% deleted)
     
     if(length(deleted)==0){
-      message("No deleted IDs to remove! \n")
+      cat("No deleted IDs to remove! \n")
     } 
     else if (length(deleted)!=0) {
-      message("Successfully removed ", length(deleted), " deleted IDs \n")
+      cat("Successfully removed ", length(deleted), " deleted IDs \n")
     } 
   } else if (!check_delID){
-    message("Not checking uniprot for deleted IDs to save time, skipping \n")
+    cat("Not checking uniprot for deleted IDs to save time, skipping \n")
   }
   
   # now loop through each row of the output table and extract the sequence from uniprot
-  message("Now pulling ", nrow(data), " sequences from uniprot \n")
+  cat("Now pulling ", nrow(data), " sequences from uniprot \n")
   df = data.frame()
   for(i in 1:nrow(data)){
     
@@ -318,7 +325,7 @@ unicoRn <- function(base,
     acc_url = paste0("https://www.uniprot.org/uniprot/",id,".fasta")
     temp_seq=paste0(read.csv(url(acc_url))[,1],collapse="")
     
-    ## set up a useful warning message
+    ## set up a useful warning cat
     if(temp_seq == "Empty"){
       warning("Uniprot sequence not found. Try running with check_delID=TRUE and provide location of del_data \n")
       break
@@ -331,7 +338,7 @@ unicoRn <- function(base,
   } # end of the for each id loop
   
   
-  message("Done gathering sequences from uniprot")
+  cat("Done gathering sequences from uniprot")
   
   
   # set up the levels of the species in the df correctly
@@ -365,11 +372,11 @@ unicoRn <- function(base,
   
   ## should we return the data?
   if(returnData){
-    message("Just returning the data for you and not aligning or plotting ")
+    cat("Just returning the data for you and not aligning or plotting ")
     return(data)
   } else if (!returnData){
     
-    message("Moving on to alignment \n")
+    cat("Moving on to alignment \n")
     
     ##############
     # ALIGNMENTS #
@@ -391,7 +398,7 @@ unicoRn <- function(base,
       
       
       if(nrow(temp)<2){
-        message("Not enough sequences for ",g, " to align, skipping")
+        cat("Not enough sequences for ",g, " to align, skipping")
         next
       }
       
@@ -424,7 +431,7 @@ unicoRn <- function(base,
       )
       
       
-      message("Saved fasta alignments for ", g)
+      cat("Saved fasta alignments for ", g,"\n")
       
       
       ## save the tex file
@@ -492,7 +499,7 @@ unicoRn <- function(base,
         "\\end{document}"),
         texFile)
       
-      message("Printing the pdf for you now... \n")
+      cat("Printing the pdf for you now... \n")
       
       
       ## dont plot PDF if not requested
