@@ -166,7 +166,7 @@ unicoRn <- function(base,
       # make temp into data table to allow joining to the deleted IDs later
       temp =
         temp %>%
-        replace_na(list(uniprotswissprot="")) %>%
+        mutate(across(everything(), ~ if_else(is.na(.), "", .)))
         data.table
       
       
@@ -337,6 +337,11 @@ unicoRn <- function(base,
   # set up the levels of the species in the df correctly
   ## this makes sure the alignment is done from Human down to Fly
   data = as_tibble(df)
+  
+  data =
+    data %>%
+    dplyr::rename(Species=spec,
+                  Gene=gene)
   
   data$Species = factor(data$Species, levels=c("Human",
                                                "Mouse",
