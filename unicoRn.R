@@ -197,7 +197,7 @@ unicoRn <- function(base,
           message("taking TREMBL ID long \n")
           id = temp %>% pull(uniprotsptrembl)#makeChar(temp$uniprotsptrembl)
           
-        } else if ((temp$uniprotswissprot=="") & (temp$uniprotsptrembl="")){
+        } else if ((temp$uniprotswissprot=="") & (temp$uniprotsptrembl=="")){
           message("missing uniprot or TREMBL ID in biomaRt table, skipping species\n")
           next
           
