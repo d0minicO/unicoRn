@@ -130,7 +130,7 @@ writeLines(c(
   "\\usepackage{texshade}",
   '\\begin{document}',
   "\\begin{texshade}",
-  "example.fasta}",
+  "{example.fasta}",
   "\\end{texshade}",
   '\\end{document}'
 ), "example.tex")
