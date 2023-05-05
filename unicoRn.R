@@ -2,7 +2,7 @@ unicoRn <- function(base,
                     subs_name="unicoRn",
                     genes,
                     len="Full",
-                    speciesToUse="xtropicalis|ecaballus|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus"
+                    speciesToUse="xtropicalis|ecaballus|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus",
                     del_data=NULL,
                     check_delID=FALSE,
                     returnData=FALSE,
@@ -180,7 +180,7 @@ unicoRn <- function(base,
       
       # if we only got one entry then that's cool
       if(nrow(temp)==1){
-        cat(gene, " was found uniquely ")
+        cat(gene, " was found uniquely \n")
         
         # keep the uniprotID if there is one, or just keep the tremblID
         if(temp$uniprotswissprot!=""){
@@ -198,7 +198,7 @@ unicoRn <- function(base,
           id = temp %>% pull(uniprotsptrembl)#makeChar(temp$uniprotsptrembl)
           
         } else if ((temp$uniprotswissprot=="") & (temp$uniprotsptrembl="")){
-          message("missing uniprot or TREMBL ID in biomaRt table, skipping species")
+          message("missing uniprot or TREMBL ID in biomaRt table, skipping species\n")
           next
           
         } else {
@@ -207,7 +207,7 @@ unicoRn <- function(base,
         }
         
       } else if (nrow(temp)>1){ # end of the unique returns
-        cat(gene, " has more than one match ")
+        cat(gene, " has more than one match \n")
         
         
         # look for the uniprot ID
@@ -338,7 +338,7 @@ unicoRn <- function(base,
   } # end of the for each id loop
   
   
-  cat("Done gathering sequences from uniprot")
+  cat("Done gathering sequences from uniprot\n")
   
   
   # set up the levels of the species in the df correctly
@@ -350,9 +350,11 @@ unicoRn <- function(base,
     dplyr::rename(Species=spec,
                   Gene=gene)
   
+  
   data$Species = factor(data$Species, levels=c("Human",
                                                "Mouse",
                                                "Dog",
+                                               "Horse",
                                                "Opossum",
                                                "Chicken",
                                                "Frog",
@@ -372,7 +374,7 @@ unicoRn <- function(base,
   
   ## should we return the data?
   if(returnData){
-    cat("Just returning the data for you and not aligning or plotting ")
+    cat("Just returning the data for you and not aligning or plotting\n")
     return(data)
   } else if (!returnData){
     
@@ -398,7 +400,7 @@ unicoRn <- function(base,
       
       
       if(nrow(temp)<2){
-        cat("Not enough sequences for ",g, " to align, skipping")
+        cat("Not enough sequences for ",g, " to align, skipping\n")
         next
       }
       
