@@ -307,7 +307,7 @@ unicoRn <- function(base,
   
   
   
-  cat("Done gathering sequences from uniprot\n")
+  cat("Done gathering sequences from uniprot\n\n\n")
   
   
   # set up the levels of the species in the df correctly
