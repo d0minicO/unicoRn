@@ -168,7 +168,7 @@ unicoRn <- function(base,
       # make temp into data table to allow joining to the deleted IDs later
       temp =
         temp %>%
-        mutate(across(everything(), ~ if_else(is.na(.), "", .))) %>%
+        mutate(across(everything(), ~ if_else(is.na(.), "", as.character(.)))) %>%
         data.table
       
       
