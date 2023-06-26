@@ -171,7 +171,7 @@ unicoRn <- function(base,
       
       # if we didnt match that gene then skip it
       if (nrow(temp)==0){
-        message(gene, "not found in", spec, "database \n")
+        message(gene, " not found in ", spec, " database, skipping \n")
         next
       }
       
@@ -272,7 +272,7 @@ unicoRn <- function(base,
   }
   
   # now loop through each row of the output table and extract the sequence from uniprot
-  cat("Now pulling ", nrow(data), " sequences from uniprot \n")
+  cat("\n\n\nNow pulling", nrow(data), "sequences from uniprot \n")
   df = data.frame()
   for(i in 1:nrow(data)){
     
@@ -347,7 +347,7 @@ unicoRn <- function(base,
     return(data)
   } else if (!returnData){
     
-    cat("Moving on to alignment \n")
+    cat("Moving on to alignment \n\n\n")
     
     ##############
     # ALIGNMENTS #
@@ -390,7 +390,7 @@ unicoRn <- function(base,
       msaPrettyPrint(aligned,
                      alFile = alFile,
                      #file = texFile,
-                     output="asis",
+                     output="tex",
                      #showNames="none",
                      #showLogo="top",
                      #logoColors="rasmol",
