@@ -3,8 +3,6 @@ unicoRn <- function(base,
                     genes,
                     len="Full",
                     speciesToUse="xtropicalis|ecaballus|mdomestica|drerio|dmelanogaster|mmusculus|hsapiens|clfamiliaris|ggallus",
-                    del_data=NULL,
-                    check_delID=FALSE,
                     returnData=FALSE,
                     plotPdf=T){
   
@@ -14,8 +12,6 @@ unicoRn <- function(base,
   # genes = character string or vector eg "Gene", or c("Gene1", "Gene2")
   # len = the length of the first how many AAs to plot (or if you just want the whole length make len="whole" or any characters will do)
   # speciesToUse = character string of the species to use
-  # del_data = location where the databse of IDs deleted from uniprot are
-  # check_delID = TRUE or FALSE. Might be required if unable to pull some sequences from uniprot if they were deleted. Takes a long time so default should be false
   # returnData = TRUE or FALSE. If TRUE, then return a data.frame of the uniprot IDs, species, and sequences.
   
   #############
@@ -274,68 +270,40 @@ unicoRn <- function(base,
     
   }
   
-  
-  ## should we check the deleted IDs database?
-  if(check_delID){
-    ## now once all the uniprot IDs are in we can remove any deleted IDs
-    ### all accessions deleted by uniprot
-    ## huge table takes ages to load
-    ## only work on in data.table syntax not dplyr!!
-    cat("Now loading the uniprot deleted IDs database which will take a minute or two...\n")
-    del_accs = readRDS(del_data)
-    # set keys to help join faster
-    setkey(del_accs, "ID")
-    
-    # make the ids table into a data table to allow quick join to the deleted IDs
-    data =
-      data %>% data.table()
-    # set the key
-    setkey(data,"Uniprot_id")
-    
-    deleted = makeChar(data[del_accs, nomatch = 0])
-    
-    # remove any deleted IDs
-    data =
-      data %>%
-      filter(Uniprot_id %notin% deleted)
-    
-    if(length(deleted)==0){
-      cat("No deleted IDs to remove! \n")
-    } 
-    else if (length(deleted)!=0) {
-      cat("Successfully removed ", length(deleted), " deleted IDs \n")
-    } 
-  } else if (!check_delID){
-    cat("Not checking uniprot for deleted IDs to save time, skipping \n")
-  }
-  
   # now loop through each row of the output table and extract the sequence from uniprot
   cat("Now pulling ", nrow(data), " sequences from uniprot \n")
   df = data.frame()
   for(i in 1:nrow(data)){
     
-    temp_seq = "Empty"
-    
     spec = data[i,1]
     gene = data[i,2]
     id = data[i,3]
     
-    
     ### get the AA sequence from uniprot
     acc_url = paste0("https://www.uniprot.org/uniprot/",id,".fasta")
-    temp_seq=paste0(read.csv(url(acc_url))[,1],collapse="")
+    temp_data = tryCatch({
+      paste0(read.csv(url(acc_url))[,1],collapse="")
+    }, warning = function(w) {
+      NA
+    }, error = function(e) {
+      NA
+    }, finally = {
+      NA
+    })
     
-    ## set up a useful warning cat
-    if(temp_seq == "Empty"){
-      warning("Uniprot sequence not found. Try running with check_delID=TRUE and provide location of del_data \n")
-      break
+    # If temp_data is NA, then skip to next iteration
+    if (is.na(temp_data)) {
+      warning(paste0("Uniprot sequence not found for id: ", id, ". Check Uniprot, it may have been deleted. Ignoring this id for alignment."))
+      next
     }
     
+    temp_seq = temp_data
     
     # piece together the df
     temp_df = data.frame(gene,id,temp_seq,spec)
     df = rbind.data.frame(df,temp_df)
   } # end of the for each id loop
+  
   
   
   cat("Done gathering sequences from uniprot\n")
