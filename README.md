@@ -29,6 +29,7 @@ library(tidyverse)
 library(data.table)
 library(tinytex)
 library(tools)
+library(devtools)
 ```
 
 ### Part 2 -- source unicoRn from github

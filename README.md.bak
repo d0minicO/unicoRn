@@ -174,12 +174,8 @@ For more help with tinytex/latex issues check out the developer's debugging inst
 
 ## Deleted Uniprot IDs
 
-It is annoying but Uniprot is a curated database meaning that they delete old and/or spurious IDs. Many of these are still associated with genes in biomaRt. If you receive an error when trying to get sequences from uniprot and you have been running the default mode of check_delID=FALSE, then it is likely that you will need to download the database (see Part 3 of installation instructions above) and run Unicorn with check_delID=TRUE, and provide the location of the downloaded deleted ids database Rds file to unicoRn as the del_data argument. This step takes a several minutes as the database is millions of entries long and takes a while to load and search (even with data.table...).
+If you see a warning like "Uniprot sequence not found for id. Ignoring this id." This means that one of the IDs you are trying to pull from Uniprot has been deleted recently.
 
-When running with check_delID=TRUE if you receive an error like "cannot allocate vector of size...x" then it is likely that your computer ran out of RAM while loading the database of deleted IDs. Here are some things that might help:
-```sh
-gc() # garbage cleanup
-```
--  restarting a fresh R session without any variables saved 
--  closing open programs on your computer
--  running on a machine with more RAM (16Gb Windows 10 works for me)
+It is annoying but Uniprot is a curated database meaning that they periodically delete old and/or spurious IDs. It is not trivial to solve this and the easiest thing to do for now is just to ignore that ID for the alignment, with the expectation that other species IDs will be found.
+
+If you want to align specific IDs then you could try my other tool called [alignR](https://github.com/d0minicO/alignR), that allows you to align any Uniprot IDs or custom sequences in the same way UnicoRn does.
