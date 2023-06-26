@@ -107,6 +107,7 @@ unicoRn <- function(base,
   ########################
   ## using biomart then uniprot
   
+  cat("Hello! Welcome to unicoRn\n")
   
   ## loop through each mart
   data = data.frame()
@@ -123,7 +124,7 @@ unicoRn <- function(base,
       makeChar
     
     
-    cat("Hello! loading all ensembl genes for ", spec, "\n")
+    cat("\n\n\nLoading all ensembl genes for", spec, "\n")
     
     
     this_mart = useDataset(mart,mart=ensembl) # this is slow so only do once for the whole set of genes
@@ -138,7 +139,7 @@ unicoRn <- function(base,
     
     # skip if nothing comes back from biomart
     if(nrow(mapping)==0){ 
-      cat("No records for given genes for ", spec, " moving on \n")
+      message("No records for given genes for ", spec, " moving on \n")
       next
     }
     ## loop through each gene and check it has been found
@@ -153,7 +154,7 @@ unicoRn <- function(base,
     for(gene in genes){
       
       
-      cat("Getting sequences for ", gene, "\n")
+      cat("Getting sequences for", gene, "\n")
       
       # case insensitive match
       temp =
@@ -170,7 +171,7 @@ unicoRn <- function(base,
       
       # if we didnt match that gene then skip it
       if (nrow(temp)==0){
-        cat("warning: no ", gene, " found in ", spec, " database \n")
+        message(gene, "not found in", spec, "database \n")
         next
       }
       
@@ -190,7 +191,7 @@ unicoRn <- function(base,
           id = makeChar(temp$uniprotsptrembl)
           
         } else if (nchar(temp$uniprotsptrembl)==10){
-          message("taking TREMBL ID long \n")
+          cat("taking TREMBL ID long \n")
           id = temp %>% pull(uniprotsptrembl)#makeChar(temp$uniprotsptrembl)
           
         } else if ((temp$uniprotswissprot=="") & (temp$uniprotsptrembl=="")){
@@ -198,7 +199,7 @@ unicoRn <- function(base,
           next
           
         } else {
-          warning(gene, " encountered a problem, check it \n")
+          message(gene, " encountered a problem, check it \n")
           next
         }
         
@@ -293,7 +294,7 @@ unicoRn <- function(base,
     
     # If temp_data is NA, then skip to next iteration
     if (is.na(temp_data)) {
-      warning(paste0("Uniprot sequence not found for id: ", id, ". Check Uniprot, it may have been deleted. Ignoring this id for alignment."))
+      message(paste0("Uniprot sequence not found for id: ", id, ". Check Uniprot, it may have been deleted. Ignoring this id for alignment."))
       next
     }
     
@@ -366,9 +367,9 @@ unicoRn <- function(base,
         data %>%
         filter(Gene==g)
       
-      
+      # can't align one sequence!!
       if(nrow(temp)<2){
-        cat("Not enough sequences for ",g, " to align, skipping\n")
+        message("Not enough sequences for ",g, " to align, skipping\n")
         next
       }
       
@@ -469,7 +470,7 @@ unicoRn <- function(base,
         "\\end{document}"),
         texFile)
       
-      cat("Printing the pdf for you now... \n")
+      cat("Printing the pdf for you now... \n\n\n\n")
       
       
       ## dont plot PDF if not requested
